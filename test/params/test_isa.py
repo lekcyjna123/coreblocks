@@ -1,10 +1,9 @@
 import pytest
-import unittest
 
 from coreblocks.params.isa_params import Extension, ISA
 
 
-class TestISA(unittest.TestCase):
+class TestISA:
     class ISATestEntry:
         def __init__(self, isa_str, valid, xlen=None, reg_cnt=None, extensions=None):
             self.isa_str = isa_str

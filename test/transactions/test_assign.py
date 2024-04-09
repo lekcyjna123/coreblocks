@@ -8,7 +8,6 @@ from transactron.utils._typing import MethodLayout
 from transactron.utils import AssignType, assign
 from transactron.utils.assign import AssignArg, AssignFields
 
-from unittest import TestCase
 from parameterized import parameterized_class, parameterized
 
 
@@ -56,7 +55,7 @@ params_mk = [
         for c, m in params_mk
     ],
 )
-class TestAssign(TestCase):
+class TestAssign():
     # constructs `assign` arguments (views, proxies, dicts) which have an "inner" and "outer" part
     # parameterized with a constructor and a layout of the inner part
     build: Callable[[Callable[[MethodLayout], AssignArg], MethodLayout], AssignArg]
@@ -113,7 +112,7 @@ class TestAssign(TestCase):
     def assertIs_AP(self, expr1, expr2):  # noqa: N802
         if isinstance(expr1, ArrayProxy) and isinstance(expr2, ArrayProxy):
             # new proxies are created on each index, structural equality is needed
-            self.assertIs(expr1.index, expr2.index)
+            assert expr1.index is expr2.index
             assert len(expr1.elems) == len(expr2.elems)
             for x, y in zip(expr1.elems, expr2.elems):
                 self.assertIs_AP(x, y)
@@ -122,4 +121,4 @@ class TestAssign(TestCase):
             assert expr1.start == expr2.start
             assert expr1.stop == expr2.stop
         else:
-            self.assertIs(expr1, expr2)
+            assert expr1 is expr2

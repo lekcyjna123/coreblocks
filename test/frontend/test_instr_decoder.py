@@ -6,7 +6,6 @@ from coreblocks.params import *
 from coreblocks.params.configurations import test_core_config
 from coreblocks.frontend.decoder.instr_decoder import InstrDecoder, Encoding, instructions_by_optype
 from coreblocks.frontend.decoder import *
-from unittest import TestCase
 from typing import Optional
 
 
@@ -286,7 +285,7 @@ class TestDecoderEExtLegal(TestCaseWithSimulator):
             sim.add_process(process)
 
 
-class TestEncodingUniqueness(TestCase):
+class TestEncodingUniqueness():
     def test_encoding_uniqueness(self):
         code_type = tuple[Optional[int], Optional[int], Optional[int], Optional[int]]
 
@@ -334,7 +333,7 @@ class TestEncodingUniqueness(TestCase):
                     known_codes[prefix] = None
 
                 # current instruction can not be prefix of other instruction
-                self.assertNotIn(code, known_codes, f"Instruction is not unique: I = {instruction}")
+                assert not code in known_codes, f"Instruction is not unique: I = {instruction}"
 
                 known_codes[code] = instruction
 
@@ -390,9 +389,7 @@ class TestEncodingUniqueness(TestCase):
 
                 code = instruction_code(instruction)
 
-                self.assertNotIn(
-                    code, known_codes, f"Instruction is not unique within OpType: OpType={ext} I={instruction}"
-                )
+                assert not code in known_codes, f"Instruction is not unique within OpType: OpType={ext} I={instruction}"
 
                 known_codes.add(code)
 

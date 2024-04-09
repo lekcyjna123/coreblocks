@@ -10,12 +10,11 @@ from transactron.core import (
 )
 from transactron.core.tmodule import CtrlPath
 from transactron.core.manager import MethodMap
-from unittest import TestCase
 from transactron.testing import TestCaseWithSimulator
 from transactron.utils.dependencies import DependencyContext
 
 
-class TestExclusivePath(TestCase):
+class TestExclusivePath():
     def test_exclusive_path(self):
         m = TModule()
         m._MustUse__silence = True  # type: ignore

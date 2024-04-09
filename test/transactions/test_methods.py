@@ -11,8 +11,6 @@ from transactron.lib import *
 
 from parameterized import parameterized
 
-from unittest import TestCase
-
 
 class TestDefMethod(TestCaseWithSimulator):
     class CircuitTestModule(Elaboratable):
@@ -138,7 +136,7 @@ class AdapterCircuit(Elaboratable):
         return m
 
 
-class TestInvalidMethods(TestCase):
+class TestInvalidMethods():
     def assert_re(self, msg, m):
         with pytest.raises(RuntimeError, match=msg):
             Fragment.get(TransactionModule(m), platform=None)

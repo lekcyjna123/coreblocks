@@ -1,4 +1,3 @@
-from unittest.case import TestCase
 import pytest
 from amaranth import *
 from amaranth.sim import *
@@ -22,7 +21,7 @@ from transactron.core.manager import TransactionScheduler
 from transactron.utils.dependencies import DependencyContext
 
 
-class TestNames(TestCase):
+class TestNames():
     def test_names(self):
         mgr = TransactionManager()
         mgr._MustUse__silence = True  # type: ignore

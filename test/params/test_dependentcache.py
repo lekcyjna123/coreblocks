@@ -1,9 +1,7 @@
-import unittest
-
 from coreblocks.params.genparams import DependentCache
 
 
-class TestDependentCache(unittest.TestCase):
+class TestDependentCache:
     class WithCache(DependentCache):
         def __init__(self, x=1):
             super().__init__()
@@ -34,7 +32,7 @@ class TestDependentCache(unittest.TestCase):
         assert obj.x == wc.x
         obj2 = wc.get(TestDependentCache.CachedObject)
         assert TestDependentCache.CachedObject.count == count + 1
-        self.assertIs(obj, obj2)
+        assert obj is obj2
 
     def test_cache_kwargs(self):
         wc = TestDependentCache.WithCache()

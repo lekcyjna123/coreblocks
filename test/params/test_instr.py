@@ -1,4 +1,3 @@
-import unittest
 from typing import Sequence
 
 from amaranth import *
@@ -7,7 +6,7 @@ from coreblocks.params.instr import *
 from coreblocks.frontend.decoder.isa import *
 
 
-class InstructionTest(unittest.TestCase):
+class TestInstruction:
     def do_run(self, test_cases: Sequence[tuple[RISCVInstr, int]]):
         for instr, raw_instr in test_cases:
             assert instr.encode() == raw_instr

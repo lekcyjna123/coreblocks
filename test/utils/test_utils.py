@@ -1,4 +1,3 @@
-import unittest
 import random
 
 from amaranth import *
@@ -13,7 +12,7 @@ from transactron.utils import (
 from parameterized import parameterized_class
 
 
-class TestAlignToPowerOfTwo(unittest.TestCase):
+class TestAlignToPowerOfTwo:
     def test_align_to_power_of_two(self):
         test_cases = [
             (2, 2, 4),
