@@ -1,12 +1,13 @@
 from amaranth import *
 from amaranth.lib.data import *
+from amaranth.lib.coding import PriorityEncoder
 from typing import Optional, Iterable
 from coreblocks.func_blocks.fu.common.fifo_rs import FifoRS
 from coreblocks.params import *
 from coreblocks.arch import OpType
 from coreblocks.interface.layouts import RSLayouts
 from transactron.utils.transactron_helpers import make_layout
-from transactron.utils import ValueLike
+from transactron.utils import ValueLike, RecordDict
 from transactron import Method, TModule, def_method, Transaction
 from transactron.lib.metrics import HwExpHistogram, TaggedLatencyMeasurer
 
@@ -63,6 +64,9 @@ class LsuRS(Elaboratable):
         """
         return (addr1 >> 2) == (addr2 >> 2)
 
+    def build_dependency_tree(self, m):
+        # Tutaj chyba będzie trzeba zrobić porównanie każdy z każdym
+
     def elaborate(self, platform):
         m = TModule()
 
@@ -80,9 +84,14 @@ class LsuRS(Elaboratable):
                 ~record.rs_data.rp_s1.bool() & ~record.rs_data.rp_s2.bool() & record.rec_full.bool()
             )
 
-        @def_method(m, self.select, ready = select_possible )
-        def _():
-            pass
+        m.submodules.enc_select = enc_select = PriorityEncoder(width=self.rs_entries)
+        m.d.comb += enc_select.i.eq(~reserved_signals)
+        selected_id = enc_select.o
+
+        @def_method(m, self.select, ready=select_possible)
+        def _() -> RecordDict:
+            m.d.sync += self.data[selected_id].rec_reserved.eq(1)
+            return {"rs_entry_id": selected_id}
 
         @def_method(m, self.insert)
         def _(rs_entry_id, rs_data):
@@ -103,11 +112,24 @@ class LsuRS(Elaboratable):
                 addr, valid = self.calculate_address(i)
                 m.d.top_comb += depends[i].eq(~valid | ~this_instr_addr_v | self.check_same_address_access(addr, this_instr_addr))
 
+            # Save the newly inserted entry
             m.d.sync += self.data[rs_entry_id].rs_data.eq(rs_data)
             m.d.sync += self.data[rs_entry_id].rec_full.eq(1)
             m.d.sync += self.data[rs_entry_id].rec_reserved.eq(1)
             m.d.sync += self.data[rs_entry_id].depends.eq(depends)
 
+        @def_method(m, self.update)
+        def _(reg_id: Value, reg_val: Value) -> None:
+            # Do the standard RS data update
+            for record in self.data:
+                with m.If(record.rec_full.bool()):
+                    with m.If(record.rs_data.rp_s1 == reg_id):
+                        m.d.sync += record.rs_data.rp_s1.eq(0)
+                        m.d.sync += record.rs_data.s1_val.eq(reg_val)
+
+                    with m.If(record.rs_data.rp_s2 == reg_id):
+                        m.d.sync += record.rs_data.rp_s2.eq(0)
+                        m.d.sync += record.rs_data.s2_val.eq(reg_val)
 
         with Transaction().body(m):
             m.d.top_comb += self.rob_start_idx.eq(self.rob_get_indices(m).start)
