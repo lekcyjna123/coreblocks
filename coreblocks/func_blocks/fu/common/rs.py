@@ -46,6 +46,8 @@ class RSBase(Elaboratable):
         self.data = Array(Signal(self.internal_layout) for _ in range(self.rs_entries))
         self.data_ready = Signal(self.rs_entries)
 
+        self.validate_select_arguments = None
+
         self.perf_rs_wait_time = TaggedLatencyMeasurer(
             f"fu.block_{rs_number}.rs.valid_time",
             description=f"Distribution of time instructions wait in RS {rs_number}",
