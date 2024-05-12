@@ -5,7 +5,6 @@ from transactron import Method, def_method, Transaction, TModule
 from transactron.lib.connectors import FIFO, Forwarder
 from transactron.utils import DependencyContext
 from transactron.lib.simultaneous import condition
-from transactron.lib.logging import HardwareLogger
 
 from coreblocks.params import *
 from coreblocks.arch import OpType
