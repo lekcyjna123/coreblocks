@@ -1,3 +1,9 @@
+# Jeśli jakiś nie ma valid adresu, to żaddna kolejna instrukcja nie może być wykonana
+#   - potencjalna optymalizacja, spekulacyjnie wykonywać loady
+# Aktualizacja adresów:
+#   - amortyzowana
+#   - zapisz nową wartość rejestru do RS-a i zaznacz, że jest on brudny
+#   - weź N nastarszysz brudnych wpisów i wylicz im nowe zależności
 from amaranth import *
 from amaranth.lib.data import *
 from amaranth.lib.coding import PriorityEncoder
@@ -66,6 +72,7 @@ class LsuRS(Elaboratable):
 
     def build_dependency_tree(self, m):
         # Tutaj chyba będzie trzeba zrobić porównanie każdy z każdym
+        pass
 
     def elaborate(self, platform):
         m = TModule()
