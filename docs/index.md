@@ -1,5 +1,7 @@
 # Coreblocks
 
+TODO Dodać opis podobny jak w README
+
 ```{toctree}
 ---
 maxdepth: 3
